@@ -9,6 +9,7 @@ This is basically Python glue to bring together work by others, particularly:
 
 TODO:
 - [x] Figure out how to access words returned by Yamli
-- [ ] Figure out if PyAramorph does what I need
+- [ ] Work out how to use Aramorpher.cpp
+- [ ] Write Python binding for Aramorpher.cpp
 - [ ] Make Python back-end to take an Arabic word and return results from PyAramorph via AJAX
 - [ ] Format webpage to display results nicely
