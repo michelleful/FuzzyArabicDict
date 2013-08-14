@@ -1,0 +1,5 @@
+*.pyc
+*~
+fuzzyarabicdict/fuzzyarabicdict/settings_dev.py
+fuzzyarabicdict/fuzzyarabicdict/settings_prod.py
+fuzzyarabicdict/fuzzyarabicdict/settings_stage.py
