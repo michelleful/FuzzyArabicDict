@@ -121,9 +121,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    'django.contrib.admindocs',
+    'south',
+    'django-extensions',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -154,3 +156,22 @@ LOGGING = {
         },
     }
 }
+
+# ------------------
+#  Manage settings
+# ------------------
+
+import os
+
+if os.environ.has_key('HOST_ROLE'):
+    host_role = os.environ['HOST_ROLE']
+    if host_role == 'prod':
+        from settings_prod import *
+    elif host_role == 'stage':
+        from settings_stage import *
+    else:
+        from settings_dev import *
+else:
+    from settings_dev import *
+
+
