@@ -4,6 +4,7 @@ MarkupSafe==0.18
 Werkzeug==0.9.4
 argparse==1.2.1
 distribute==0.6.34
+gunicorn==18.0
 itsdangerous==0.23
 redis==2.8.0
 wsgiref==0.1.2
