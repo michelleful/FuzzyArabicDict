@@ -1,11 +1,12 @@
-<html>
-<head profile="http://www.ietf.org/rfc/rfc2731.txt"> 
+{% extends "base.html" %}
+
+{% block head %}
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript" src="jquery.monitor.js"></script>
+<!--<script type="text/javascript" src="jquery.monitor.js"></script>-->
 <script type="text/javascript">
 
 $(document).ready(function() {
-    var prev_results = ""
+    var prev_lookup = "";
     $(".yamliapi_inst_ff_arabictextbox.yamliapi_menuContent").live("DOMSubtreeModified",function(){
         // check if the property you are watching has changed
         // filter specifically the Arabic words returned by Yamli
@@ -14,77 +15,68 @@ $(document).ready(function() {
         }).not(function () {
             return $(this).css('font-style') == 'italic'
         });
-        // write results to a table
-        if (new_results != prev_results) {
-           $("#yamli_results").html(""); // clear results
-           prev_results = new_results;
-           new_results.each(function() {
-              $("#yamli_results").append('<div class="LookupWord">' + $(this).text() + '</div>');
+        // create lookup string
+        var lookup = new_results.map(function(i, el) {
+            return $(el).text();
+        }).get().join();
+        // check that this is actually something new - don't overload server
+        if (lookup != prev_lookup) {
+           prev_lookup = lookup;
+           console.log(lookup)
+           // send off to be analysed
+           $.ajax({
+              type: "POST",
+              contentType: "application/json; charset=utf-8",
+              url: "{{ url_for('query') }}",
+              data: JSON.stringify({ 'words': lookup}),
+              success: function (data) {
+                $("#yamli_results").html("");
+                console.log(data.analyses);
+                for (var analysis_number in data.analyses) {
+                    var analysis = data.analyses[analysis_number];
+                    var table_row = "<tr><td>" + analysis.word + "</td><td>" + analysis.vowelled + "</td><td>" + analysis.pos + "</td><td>" + analysis.gloss + "</td></tr>";
+                    $("#yamli_results").append(table_row);
+                }
+              },
+              dataType: "json",
            });
-           // TODO: send by Ajax as json and get the morpheme breakdown and the meaning
         }
-    })
+    });
 });
+
 </script>
 
 <style type="text/css">
-#column1 {
-    float:left;
-    width:50%;
-}
-#column2 {
-    float:right;
-    width:50%;
-}
+#yamliapi_dyn_div {visibility:hidden;}
+#query input {font-size: 200%; height: 40px; width: 300px; text-align: center;}
 </style>
 
-</head>
-
-
-<body> 
-    <div id="column1">
-        <form>
-        <input type="text" id="arabictextbox"/>
-        </form>
-    </div>
-    <div id="column2">
-        <div id="yamli_results"></div>
-    </div>
-
-<!--
-<div class="yamliapi_menuContent yamliapi_inst_ff_arabictextbox">
-<div style="text-align: left; padding: 3px; color: black; background-color: rgb(245, 249, 255); cursor: pointer; white-space: nowrap; font-size: 13px; direction: ltr; font-style: italic;">al</div>
-<div style="text-align: right; padding: 3px; color: black; background-color: rgb(245, 249, 255); cursor: pointer; white-space: nowrap; font-size: 13px; direction: rtl;">ال</div>
-<div style="text-align: right; padding: 3px; color: black; background-color: rgb(245, 249, 255); cursor: pointer; white-space: nowrap; font-size: 13px; direction: rtl;">أل</div>
-<div style="text-align: right; padding: 3px; color: black; background-color: rgb(198, 216, 255); cursor: pointer; white-space: nowrap; font-size: 13px; direction: rtl;">عل</div>
-<div style="text-align: right; padding: 3px; color: black; background-color: rgb(245, 249, 255); cursor: pointer; white-space: nowrap; font-size: 13px; direction: rtl; display: none;">عال</div>
-<div style="text-align: right; padding: 3px; color: rgb(17, 42, 187); background-color: rgb(245, 249, 255); cursor: pointer; white-space: nowrap; font-size: 10.4px; direction: ltr; display: block;">show more</div>
-<div style="text-align: right; padding: 3px; color: rgb(17, 42, 187); background-color: rgb(245, 249, 255); cursor: pointer; white-space: nowrap; font-size: 10.4px; direction: ltr; display: none;" title="Click to report that your word choice doesn't appear">report word</div>
-</div>
--->
-
-<!--
-<div class="yamliapi_menuContent yamliapi_inst_ff_arabictextbox">
-<div style="text-align: right; padding: 3px; color: black; background-color: rgb(245, 249, 255); cursor: pointer; white-space: nowrap; font-size: 14px; direction: rtl; font-style: italic;" itemtype="3">a</div>
-<div style="text-align: right; padding: 3px; color: black; background-color: rgb(245, 249, 255); cursor: pointer; white-space: nowrap; font-size: 14px; direction: rtl;" itemtype="3">اى</div>
-<div style="text-align: right; padding: 3px; color: black; background-color: rgb(245, 249, 255); cursor: pointer; white-space: nowrap; font-size: 14px; direction: rtl;" itemtype="3">ا</div>
-<div style="text-align: right; padding: 3px; color: rgb(17, 42, 187); background-color: rgb(245, 249, 255); cursor: pointer; white-space: nowrap; font-size: 11.2px; direction: ltr; display: none;" itemtype="4">show more</div>
-<div style="text-align: right; padding: 3px; color: rgb(17, 42, 187); background-color: rgb(245, 249, 255); cursor: pointer; white-space: nowrap; font-size: 11.2px; direction: ltr; display: block;" itemtype="5" title="Click to report that your word choice doesn't appear">report word</div>
-<div style="text-align: right; padding: 3px; color: rgb(245, 249, 255); background-color: rgb(245, 249, 255); cursor: default; white-space: nowrap; font-size: 14px; direction: rtl;" itemtype="1">أ</div>
-</div>
--->
-
-</body>
 
 <!-- YAMLI CODE START -->
 <script type="text/javascript" src="http://api.yamli.com/js/yamli_api.js"></script>
 <script type="text/javascript">
   if (typeof(Yamli) == "object" && Yamli.init( { uiLanguage: "en" , startMode: "onOrUserDefault" } ))
   {
-    Yamli.yamlify( "arabictextbox", { settingsPlacement: "bottomLeft" } );
+    Yamli.yamlify( "arabictextbox", { settingsPlacement: "hide", uiFontFamily: 'Ubuntu', } );
   }
 </script>
 <!-- YAMLI CODE END -->
 
+{% endblock %}
+
+
+{% block body %}
+    <div class="row">
+    <div id="query" class="offset5 span3 topspace">
+        <form>
+        <input type="text" class="big" id="arabictextbox"/>
+        </form>
+    </div>
+    </div>
+    <div class="span9 offset3 topspace">
+        <table id="yamli_results"></table>
+    </div>
+
+{% endblock %}
 
 
