@@ -5,41 +5,69 @@
 <!--<script type="text/javascript" src="jquery.monitor.js"></script>-->
 <script type="text/javascript">
 
+// global variables - control the number of times we do the Ajax call
+var num_seen_word = 0;
+var prev_yamli_words = "";
+var prev_lookup_word;
+var num_times_called_ajax = 0;
+
+function analyse(yamli_words) {
+   num_times_called_ajax += 1;
+   $.ajax({
+      type: "POST",
+      contentType: "application/json; charset=utf-8",
+      url: "{{ url_for('query') }}",
+      data: JSON.stringify({'words': yamli_words}),
+      success: function (data) { display_results(data); },
+      dataType: "json",
+   });
+}
+
+function display_results(data) {
+    $("#yamli_results").html("");
+    for (var analysis_number in data.analyses) {
+        var analysis = data.analyses[analysis_number];
+        var table_row = "<tr><td>" + analysis.word + "</td><td>" + analysis.vowelled + "</td><td>" + analysis.pos + "</td><td>" + analysis.gloss + "</td></tr>";
+        $("#yamli_results").append(table_row);
+    }
+}
+
 $(document).ready(function() {
-    var prev_lookup = "";
+
+    // check if Yamli has updated
     $(".yamliapi_inst_ff_arabictextbox.yamliapi_menuContent").live("DOMSubtreeModified",function(){
-        // check if the property you are watching has changed
-        // filter specifically the Arabic words returned by Yamli
-        var new_results = $(this).find("div").filter(function () {
-            return $(this).css('direction') == 'rtl'
-        }).not(function () {
-            return $(this).css('font-style') == 'italic'
-        });
-        // create lookup string
-        var lookup = new_results.map(function(i, el) {
-            return $(el).text();
-        }).get().join();
-        // check that this is actually something new - don't overload server
-        if (lookup != prev_lookup) {
-           prev_lookup = lookup;
-           console.log(lookup)
-           // send off to be analysed
-           $.ajax({
-              type: "POST",
-              contentType: "application/json; charset=utf-8",
-              url: "{{ url_for('query') }}",
-              data: JSON.stringify({ 'words': lookup}),
-              success: function (data) {
-                $("#yamli_results").html("");
-                console.log(data.analyses);
-                for (var analysis_number in data.analyses) {
-                    var analysis = data.analyses[analysis_number];
-                    var table_row = "<tr><td>" + analysis.word + "</td><td>" + analysis.vowelled + "</td><td>" + analysis.pos + "</td><td>" + analysis.gloss + "</td></tr>";
-                    $("#yamli_results").append(table_row);
-                }
-              },
-              dataType: "json",
-           });
+        // find out what Yamli was querying
+        var lookup_word = $(this).find("div").filter(function() {
+            return $(this).css('font-style') == 'italic';
+        }).text();
+        // find what's in the textbox
+        var user_input = $("#arabictextbox").val()
+        // Yamli's a step behind while the user's typing so if they've synced up, it's time to start looking up stuff
+        if (lookup_word == user_input) {
+            // now we have to wait for Yamli to load up all the words (they get added one by one, or at least that's how the DOM sees it)
+            // we'll compare the new results to the previous results and wait for them to stabilise
+
+            // get the new results returned by Yamli
+            var new_results = $(this).find("div").filter(function () {
+                return $(this).css('direction') == 'rtl';
+            }).not(function () {
+                return $(this).css('font-style') == 'italic';
+            });
+            // create lookup string from the words Yamli returned
+            var yamli_words = new_results.map(function(i, el) {
+                return $(el).text();
+            }).get().join();
+
+            // if they're the same (and it's the first time they're the same,
+            // and it's actually worth sending), send it off to be analysed!
+            if (yamli_words == prev_yamli_words && num_seen_word == 0 && yamli_words.length != 0) {
+                   analyse(yamli_words);
+                   num_seen_word += 1;
+            } else {
+                prev_yamli_words = yamli_words;
+            }
+        } else {
+            num_seen_word = 0;            
         }
     });
 });
