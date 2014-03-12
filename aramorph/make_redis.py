@@ -23,13 +23,32 @@ def process_textfile(filename):
 p_AZ = re.compile('^[A-Z]')
 p_iy = re.compile('iy~$')
 
+pos_replacement = {
+    'ADJ': 'Adjective',
+    'ADV': 'Adverb',
+    'ABBREV': 'Abbreviation',
+    'PREP': 'Preposition',
+    'NEG_PART': 'Negative particle',
+    'CONJ': 'Conjunction',
+    'INTERJ': 'Interjection',
+    'NOUN_PROP': 'Proper noun',
+    'FUNC_WORD': 'Function word',
+    'REL_PRON': 'Relative pronoun',
+    'DET': 'Determiner',
+    'DEM_PRON': 'Demonstrative pronoun',
+    'INTERROG_PART': 'Interrogative pronoun',
+    'FUT_PART': 'Future particle'
+}
+
 def process_pos(voc, cat, glossPOS):
     m = re.search('<pos>.*/(.+?)</pos>', glossPOS)
     if m:
         POS = m.group(1)
         gloss = glossPOS
-        if POS == 'ADJ':
-            POS = 'Adjective'
+        # replace abbreviations as above with their long forms
+        for pos_type, long_pos_type in pos_replacement.items():
+            if pos_type.startswith(POS):
+                POS = long_pos_type
     else:
         gloss = glossPOS
         if cat.startswith('Pref-0') or cat.startswith('Suff-0'):
@@ -53,6 +72,9 @@ def process_pos(voc, cat, glossPOS):
         else:
             print "no POS can be deduced for %s" % voc
             assert False
+
+    # make POS sentence case
+    POS = POS.capitalize()
 
     gloss = re.sub('<pos>.+?</pos>', '', gloss)
     gloss = gloss.strip()
