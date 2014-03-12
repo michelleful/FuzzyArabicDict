@@ -9,6 +9,6 @@ This is basically Python glue to bring together work by others, particularly:
 
 TODO:
 - [x] Figure out how to access words returned by Yamli
-- [ ] Rewrite PyAramorph to (i) use a Redis backend and (ii) return results in a nice json package
-- [ ] Make Flask back-end to take a list of Arabic words and return results from PyAramorph via AJAX (use Ember.js?)
+- [x] Rewrite PyAramorph to (i) use a Redis backend and (ii) return results in a nice json package
+- [x] Make Flask back-end to take a list of Arabic words and return results from PyAramorph via AJAX
 - [ ] Format webpage to display results nicely
