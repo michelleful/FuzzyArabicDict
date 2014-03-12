@@ -48,4 +48,8 @@ img.resize {width:17.5%; height: auto; padding-right:20pt;}
 }
 .floatleft {float:left; margin-right:15pt;}
 .greyout {color:#555; border-color:#555; }
+table {font-size:120%;}
+table td {padding-left:10pt; padding-right:10pt; padding-top: 5pt; padding-bottom:5pt;}
+#yamli_results td:first-child {font-size:170%;}
+#yamli_results tr:nth-child(even) { background-color:#F2F2F2; }
 
