@@ -11,9 +11,6 @@ var prev_yamli_words = "";
 var prev_lookup_word;
 var num_times_called_ajax = 0;
 
-// start word
-var start_word = "3araby"; //"{{ start_word }}";
-
 function analyse(yamli_words) {
    num_times_called_ajax += 1;
    $.ajax({
@@ -109,7 +106,7 @@ $(document).ready(function() {
     <div id="query" class="offset5 span3 topspace">
         <form>
         <input type="text" class="big" id="arabictextbox"/>
-        Try: <a class="sample">3rby</a>, <a class="sample">kitab</a>, <a class="sample">madrasa</a>
+        Try: <a class="sample">3raby</a>, <a class="sample">kitab</a>, <a class="sample">madrasa</a>
         </form>
     </div>
     </div>
