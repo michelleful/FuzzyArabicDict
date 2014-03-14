@@ -39,7 +39,7 @@ function try_sample(word) {
 $(document).ready(function() {
     $(".sample").click(function() {
         try_sample($(this).text());
-    })
+    });
 
     // check if Yamli has updated
     $(".yamliapi_inst_ff_arabictextbox.yamliapi_menuContent").live("DOMSubtreeModified",function(){
@@ -83,13 +83,40 @@ $(document).ready(function() {
 
 <style type="text/css">
 #yamliapi_dyn_div {visibility:hidden;}
-#query input {font-size: 200%; height: 40px; width: 300px; text-align: center;}
+#query input {
+    font-size: 200%; 
+    height: 40px; 
+    width: 300px; 
+    text-align: center;
+    background: url(http://www.yamli.com/images/logo_y_96x96.gif) no-repeat scroll 7px 7px;
+    background-size: 40px 40px;
+}
 #yamli_results {margin: 0 auto; font-size:120%;}
 table td {padding:10pt;}
 #yamli_results td:first-child, td:nth-child(2) {font-size:160%; text-align: right;}
 #yamli_results tr:nth-child(odd) { background-color:#F2F2F2; }
+#yamli_logo {width:40px; height: auto;}
 </style>
 
+{% endblock %}
+
+
+{% block body %}
+
+<div class="row">
+<div id="query" class="offset5 span3 topspace">
+    <form>
+    <input type="text" class="big" id="arabictextbox"/>
+    Try: <a class="sample">3raby</a>, <a class="sample">kitab</a>, <a class="sample">madrasa</a>
+    </form>
+</div>
+</div>
+<div class="row">
+<div class="span9 offset2 bottomspace">
+    <table id="yamli_results" class="bottomspace"></table>
+    <p></p>
+</div>
+</div>
 
 <!-- YAMLI CODE START -->
 <script type="text/javascript" src="http://api.yamli.com/js/yamli_api.js"></script>
@@ -100,22 +127,6 @@ table td {padding:10pt;}
   }
 </script>
 <!-- YAMLI CODE END -->
-
-{% endblock %}
-
-
-{% block body %}
-    <div class="row">
-    <div id="query" class="offset5 span3 topspace">
-        <form>
-        <input type="text" class="big" id="arabictextbox"/>
-        Try: <a class="sample">3raby</a>, <a class="sample">kitab</a>, <a class="sample">madrasa</a>
-        </form>
-    </div>
-    </div>
-    <div class="span10 offset2 bottomspace">
-        <table id="yamli_results" class="bottomspace"></table>
-    </div>
 
 {% endblock %}
 
