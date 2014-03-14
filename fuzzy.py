@@ -20,7 +20,7 @@ app.config.from_envvar('FLASKR_SETTINGS', silent=True)
 def main():
     return render_template('yamli.html')
 
-@app.route('/query', methods=['POST'])
+@app.route('/query_ajax', methods=['POST'])
 def query():
     if request.json and 'words' in request.json:
         results = list()
@@ -29,6 +29,11 @@ def query():
                 if analysis:
                     results.append(analysis)
         return jsonify(analyses=results), 201
+
+# TODO: add route like /kitab etc
+# fuzzy.herokuapp.com/kitab ---> page with "kitab" already filled in and all the possibilities displayed
+#def word():
+#    return render_template('yamli.html', {'word': word})
 
 if __name__ == '__main__':
     app.run(debug=True)
