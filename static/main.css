@@ -37,7 +37,7 @@ img.resize {width:17.5%; height: auto; padding-right:20pt;}
     font-weight: bold;
     margin:auto;
 }
-.smaller {border-width: 9px; width:90px; height: 90px; font-size: 40px; font-weight:normal; line-height:90px; margin-top:10px;}
+.smaller {border-width: 9px; width:90px; height: 90px; font-size: 31px; font-weight:bold; line-height:90px; margin-top:10px;}
 .rotate45 {
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
