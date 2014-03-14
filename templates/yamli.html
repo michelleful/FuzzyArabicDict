@@ -11,6 +11,9 @@ var prev_yamli_words = "";
 var prev_lookup_word;
 var num_times_called_ajax = 0;
 
+// start word
+var start_word = "3araby"; //"{{ start_word }}";
+
 function analyse(yamli_words) {
    num_times_called_ajax += 1;
    $.ajax({
@@ -32,7 +35,14 @@ function display_results(data) {
     }
 }
 
+function try_sample(word) {
+    $("#arabictextbox").val(word).focus().trigger("click");
+}
+
 $(document).ready(function() {
+    $(".sample").click(function() {
+        try_sample($(this).text());
+    })
 
     // check if Yamli has updated
     $(".yamliapi_inst_ff_arabictextbox.yamliapi_menuContent").live("DOMSubtreeModified",function(){
@@ -85,7 +95,7 @@ $(document).ready(function() {
 <script type="text/javascript">
   if (typeof(Yamli) == "object" && Yamli.init( { uiLanguage: "en" , startMode: "onOrUserDefault" } ))
   {
-    Yamli.yamlify( "arabictextbox", { settingsPlacement: "hide", uiFontFamily: 'Ubuntu', } );
+    Yamli.yamlify( "arabictextbox", { settingsPlacement: "hide", uiFontFamily: 'Ubuntu' } );
   }
 </script>
 <!-- YAMLI CODE END -->
@@ -98,6 +108,7 @@ $(document).ready(function() {
     <div id="query" class="offset5 span3 topspace">
         <form>
         <input type="text" class="big" id="arabictextbox"/>
+        Try: <a class="sample">3rby</a>, <a class="sample">araby</a>, <a class="sample">عربي</a>
         </form>
     </div>
     </div>
