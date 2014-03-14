@@ -10,7 +10,8 @@ unic = u"".join(map(unichr,
              list(range(0x0640, 0x0653)) + # taTwiil through sukuun
              list(range(0x0660, 0x066A)) + # numerals
              list(range(0x0670, 0x0671)) + # dagger 'alif
-             list(range(0x0627, 0x0628)))) # waSla
+#             list(range(0x0671, 0x0672)))) # waSla
+             list(range(0x0627, 0x0628)))) # waSla replacement
              # waSla doesn't seem to appear in many web-friendly fonts
              # so I'll display an alif instead
 
