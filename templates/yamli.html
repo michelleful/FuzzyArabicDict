@@ -30,7 +30,7 @@ function display_results(data) {
     $("#yamli_results").html("");
     for (var analysis_number in data.analyses) {
         var analysis = data.analyses[analysis_number];
-        var table_row = "<tr><td>" + analysis.word + "</td><td>" + analysis.vowelled + "</td><td>" + analysis.pos + "</td><td>" + analysis.gloss + "</td></tr>";
+        var table_row = "<tr><td>" + analysis.word + "</td><td>" + analysis.vowelled + "</td><td>" + analysis.transliteration + "</td><td>" + analysis.pos + "</td><td>" + analysis.gloss + "</td></tr>";
         $("#yamli_results").append(table_row);
     }
 }

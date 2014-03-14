@@ -125,7 +125,11 @@ def check_compatibility(word, prefix, stem, suffix, debug=False):
                 gloss = "%s + %s + %s" % (prefix_info["gloss"], stem_info["gloss"], suffix_info["gloss"])
                 gloss = gloss.strip().strip("+").strip()
 
-                solutions.append({'word': translate_b2u(word), 'vowelled': vowelled_form, 'pos': pos, 'gloss': gloss})
+                solutions.append({'word': translate_b2u(word), 
+                                  'vowelled': translate_b2u(vowelled_form),
+                                  'transliteration': translate_b2ala(vowelled_form), 
+                                  'pos': pos, 
+                                  'gloss': gloss})
                 
     return solutions
 
