@@ -9,11 +9,7 @@ unic = u"".join(map(unichr,
              list(range(0x0621, 0x063b)) + # hamza through ghayn
              list(range(0x0640, 0x0653)) + # taTwiil through sukuun
              list(range(0x0660, 0x066A)) + # numerals
-             list(range(0x0670, 0x0671)) + # dagger 'alif
-#             list(range(0x0671, 0x0672)))) # waSla
-             list(range(0x0627, 0x0628)))) # waSla replacement
-             # waSla doesn't seem to appear in many web-friendly fonts
-             # so I'll display an alif instead
+             list(range(0x0670, 0x0672)))) # dagger 'alif, waSla
 
 # more reader-friendly transliteration - ALA/Wehr 
 ala  = [# hamza through ghayn
@@ -33,7 +29,9 @@ buck2unic = dict(zip([ord(letter) for letter in buck], unic))
 unic2buck = dict(zip([ord(letter) for letter in unic], buck))
 
 def translate_b2u(buckwalter_string):
-    return unicode(buckwalter_string).translate(buck2unic)
+    string = unicode(buckwalter_string).translate(buck2unic)
+    return string.replace(u"\u0671", u"\u0627") 
+    # because alef wasla doesn't show up properly in most fonts
 
 def translate_u2b(unicode_string):
     return unicode_string.translate(unic2buck)
