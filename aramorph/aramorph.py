@@ -2,10 +2,16 @@
 Some code in here is taken from Alex Lee's pyaramorph port of the
 Buckwalter Arabic Morphological Analyzer (GPL'ed)
 
-Rewritten to use Redis (run "make_redis.py" first)
+Run this first:
+> python make_pickle.py
 """
-import redis
-r_server = redis.Redis("localhost")
+from make_pickle import *
+
+import os
+dir = os.path.dirname(__file__)
+if dir: dir += "/"
+f = open(dir + "aramorph.info", "rb")
+ai = pickle.load(f)
 
 from transliterate import * # transliteration methods
 
@@ -49,9 +55,9 @@ def analyse(word, debug=False):
 
     for alternative in alternatives(word):
         for (prefix, stem, suffix) in segment(alternative):
-            if (r_server.sismember("prefixes", prefix) and 
-                r_server.sismember("stems", stem) and
-                r_server.sismember("suffixes", suffix)):
+            if (ai.is_valid_prefix(prefix) and 
+                ai.is_valid_stem(stem) and
+                ai.is_valid_suffix(suffix)):
                 
                 solutions = check_compatibility(alternative, 
                                                 prefix, stem, suffix, debug)
@@ -75,36 +81,18 @@ def check_compatibility(word, prefix, stem, suffix, debug=False):
                                                         prefix, stem, suffix)
     
     # loop through possible prefix entries
-    for prefix_entry in r_server.smembers("prefix:%s" % prefix):
-        prefix_info = r_server.hgetall(prefix_entry)
-        if debug: print prefix_entry, prefix_info
-        
+    for prefix_entry in ai.prefixes[prefix]:        
         # loop through possible stem entries
-        for stem_entry in r_server.smembers("stem:%s" % stem):
-            stem_info = r_server.hgetall(stem_entry)
-            if debug: print stem_entry, stem_info
-            
-            # check the prefix-stem pair
-            if not r_server.sismember("tableab", "%s %s" % (prefix_info["cat"], 
-                                                            stem_info["cat"])):
-                if debug: "\tPrefix %s and stem %s not in tableab" % (prefix_info["cat"], 
-                                                                      stem_info["cat"])
-                continue # skip if not compatible
-            if debug: "\tPrefix %s and stem %s compatible" % (prefix_info["cat"], 
-                                                              stem_info["cat"])
-
+        for stem_entry in ai.stems[stem]:
+            # check if prefix and stem are compatible
+            if not ai.are_prefix_stem_compatible(prefix_entry, stem_entry):
+                continue
+            # valid prefix and stem combo, so continue
             # loop through possible suffix entries
-            for suffix_entry in r_server.smembers("suffix:%s" % suffix):
-                suffix_info = r_server.hgetall(suffix_entry)
-                
-                # check the prefix-suffix pair
-                if not r_server.sismember("tableac", "%s %s" % (prefix_info["cat"],
-                                                                suffix_info["cat"])):
+            for suffix_entry in ai.suffixes[suffix]:
+                if not ai.are_stem_suffix_compatible(stem_entry, suffix_entry):
                     continue
-
-                # check the stem-suffix pair
-                if not r_server.sismember("tablebc", "%s %s" % (stem_info["cat"],
-                                                                suffix_info["cat"])):
+                if not ai.are_stem_suffix_compatible(stem_entry, suffix_entry):
                     continue
 
                 # if we reached this point, the prefix-stem-suffix are compatible
@@ -116,13 +104,13 @@ def check_compatibility(word, prefix, stem, suffix, debug=False):
                 # 4. part of speech (just of the stem, or all?)
                 # 5. gloss
 
-                vowelled_form = prefix_info["vowelled"] + \
-                                stem_info["vowelled"] + \
-                                suffix_info["vowelled"]
+                vowelled_form = prefix_entry.vowelled + \
+                                stem_entry.vowelled + \
+                                suffix_entry.vowelled
 
-                pos = stem_info["pos"]
+                pos = stem_entry.pos
 
-                gloss = "%s + %s + %s" % (prefix_info["gloss"], stem_info["gloss"], suffix_info["gloss"])
+                gloss = "%s + %s + %s" % (prefix_entry.gloss, stem_entry.gloss, suffix_entry.gloss)
                 gloss = gloss.strip().strip("+").strip()
 
                 solutions.append({'word': translate_b2u(word), 
