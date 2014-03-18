@@ -3,7 +3,9 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, jsonify
 
-from aramorph import aramorph
+import sys
+from aramorph import aramorph, dataclass
+sys.modules['dataclass'] = dataclass
 
 # create the application
 app = Flask(__name__)
@@ -12,7 +14,6 @@ app.config.from_object(__name__)
 # not using a database
 # not sure if I need this line:
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
-
 
 # views
 
