@@ -6,7 +6,6 @@ Run this first:
 """
 import cPickle as pickle
 import os
-import dataclass
 import sys
 
 # this is a hacky (?) way of getting the pickled object in a subdirectory
