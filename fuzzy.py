@@ -3,9 +3,7 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, jsonify
 
-import sys
-from aramorph import aramorph, dataclass
-sys.modules['dataclass'] = dataclass
+from aramorph import analyse
 
 # create the application
 app = Flask(__name__)
@@ -26,7 +24,7 @@ def query():
     if request.json and 'words' in request.json:
         results = list()
         for word in request.json['words'].split(","):
-            for analysis in aramorph.analyse_arabic(word):
+            for analysis in analyse.ai.analyse_arabic(word):
                 if analysis:
                     results.append(analysis)
         return jsonify(analyses=results), 201
