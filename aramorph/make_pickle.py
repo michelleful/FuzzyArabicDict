@@ -2,7 +2,7 @@
 
 import cPickle as pickle
 from collections import defaultdict
-from dataclass import Morpheme, AramorphInfo
+from aramorpher import Morpheme, Aramorpher
 from process_files import process_textfile, process_tableXY
 
 prefixes = defaultdict(list)
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     process_tableAC()
 
     # now construct AramorphInfo
-    aramorph = AramorphInfo(prefixes, stems, suffixes, ab, bc, ac)
+    aramorph = Aramorpher(prefixes, stems, suffixes, ab, bc, ac)
 
     # and pickle it
-    pickle.dump(aramorph, open("aramorph.info", "wb"), pickle.HIGHEST_PROTOCOL)
+    pickle.dump(aramorph, open("aramorph.data", "wb"), pickle.HIGHEST_PROTOCOL)
