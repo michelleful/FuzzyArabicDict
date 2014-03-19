@@ -54,6 +54,7 @@ def transliterate_b2ala(buckwalter_string):
     string = string.replace(u"iy", u"ī")
     
     # deal with repeated vowels    
+    string = string.replace(u"aan", "an") # nunated alif
     string = string.replace(u"āa", u"ā")
     string = string.replace(u"ūu", u"ū")
     
