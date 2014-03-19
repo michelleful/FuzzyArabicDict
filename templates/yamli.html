@@ -8,6 +8,7 @@
 // global variables - control the number of times we do the Ajax call
 var prev_yamli_words = ""; // Previous comma-separated string of words looked up by Yamli
 var prev_lookup_words = ","; // Previous c-s string of words we sent to the app
+var yamli_words = "";
 
 function analyse(yamli_words) {
    $.ajax({
@@ -76,9 +77,10 @@ $(document).ready(function() {
             // send it off to be analysed!
             if (yamli_words == prev_yamli_words  && 
                 yamli_words != prev_lookup_words && 
+                yamli_words != "أ,أ,أ, " && // bug in Firefox (?)
                 yamli_words.length != 0) {
-                analyse(yamli_words);
-                prev_lookup_words = yamli_words;
+                    analyse(yamli_words);
+                    prev_lookup_words = yamli_words;
             } else {
                 prev_yamli_words = yamli_words;
             }

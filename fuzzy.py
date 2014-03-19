@@ -25,7 +25,7 @@ def query():
         results = list()
         for word in request.json['words'].split(","):
             for analysis in analyser.ai.analyse_arabic(word):
-                if analysis:
+                if analysis and analysis not in results:
                     results.append(analysis)
         return jsonify(analyses=results), 201
 
