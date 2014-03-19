@@ -74,7 +74,7 @@ class Aramorpher(object):
 
     def analyse_arabic(self, word):
         """Find possible solutions for the given UTF8 Arabic word"""
-        buck_word = translate_u2b(word)
+        buck_word = transliterate_u2b(word)
         return self.analyse(buck_word)
 
     def analyse(self, word):
@@ -139,9 +139,9 @@ class Aramorpher(object):
                     gloss = "%s + %s + %s" % (prefix_entry.gloss, stem_entry.gloss, suffix_entry.gloss)
                     gloss = gloss.strip().strip("+").strip()
 
-                    solutions.append({'word': translate_b2u(word), 
-                                      'vowelled': translate_b2u(vowelled_form),
-                                      'transliteration': translate_b2ala(vowelled_form), 
+                    solutions.append({'word': transliterate_b2u(word), 
+                                      'vowelled': transliterate_b2u(vowelled_form),
+                                      'transliteration': transliterate_b2ala(vowelled_form), 
                                       'pos': pos, 
                                       'gloss': gloss})
                 
