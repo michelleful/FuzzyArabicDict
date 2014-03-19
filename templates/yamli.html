@@ -6,13 +6,10 @@
 <script type="text/javascript">
 
 // global variables - control the number of times we do the Ajax call
-var num_seen_word = 0;
-var prev_yamli_words = "";
-var prev_lookup_word;
-var num_times_called_ajax = 0;
+var prev_yamli_words = ""; // Previous comma-separated string of words looked up by Yamli
+var prev_lookup_words = ","; // Previous c-s string of words we sent to the app
 
 function analyse(yamli_words) {
-   num_times_called_ajax += 1;
    $.ajax({
       type: "POST",
       contentType: "application/json; charset=utf-8",
@@ -27,7 +24,12 @@ function display_results(data) {
     $("#yamli_results").html("");
     for (var analysis_number in data.analyses) {
         var analysis = data.analyses[analysis_number];
-        var table_row = "<tr><td>" + analysis.word + "</td><td>" + analysis.vowelled + "</td><td>" + analysis.transliteration + "</td><td>" + analysis.pos + "</td><td>" + analysis.gloss + "</td></tr>";
+        var table_row = "<tr><td>" + analysis.word + 
+                       "</td><td>" + analysis.vowelled + 
+                       "</td><td>" + analysis.transliteration + 
+                       "</td><td>" + analysis.pos + 
+                       "</td><td>" + analysis.gloss + 
+                       "</td></tr>";
         $("#yamli_results").append(table_row);
     }
 }
@@ -43,16 +45,19 @@ $(document).ready(function() {
 
     // check if Yamli has updated
     $(".yamliapi_inst_ff_arabictextbox.yamliapi_menuContent").live("DOMSubtreeModified",function(){
+        // find what's in the textbox
+        var user_input = $("#arabictextbox").val();
         // find out what Yamli was querying
         var lookup_word = $(this).find("div").filter(function() {
             return $(this).css('font-style') == 'italic';
         }).text();
-        // find what's in the textbox
-        var user_input = $("#arabictextbox").val()
-        // Yamli's a step behind while the user's typing so if they've synced up, it's time to start looking up stuff
+        // Yamli's sometimes a step behind while the user's typing 
+        // so if they've synced up, it's time to start looking up stuff
         if (lookup_word == user_input) {
-            // now we have to wait for Yamli to load up all the words (they get added one by one, or at least that's how the DOM sees it)
-            // we'll compare the new results to the previous results and wait for them to stabilise
+            // now we have to wait for Yamli to load up all the words 
+            // (they get added 1 by 1, or at least that's how the DOM sees it)
+            // we'll compare the new results to the previous results 
+            // and wait for them to stabilise
 
             // get the new results returned by Yamli
             var new_results = $(this).find("div").filter(function () {
@@ -65,16 +70,18 @@ $(document).ready(function() {
                 return $(el).text();
             }).get().join();
 
-            // if they're the same (and it's the first time they're the same,
-            // and it's actually worth sending), send it off to be analysed!
-            if (yamli_words == prev_yamli_words && num_seen_word == 0 && yamli_words.length != 0) {
-                   analyse(yamli_words);
-                   num_seen_word += 1;
+            // if they're the same, and they're not words we've previously looked up
+            // (this stipulation cuts down on redundant queries), 
+            // and there are actual words to be looked up,
+            // send it off to be analysed!
+            if (yamli_words == prev_yamli_words  && 
+                yamli_words != prev_lookup_words && 
+                yamli_words.length != 0) {
+                analyse(yamli_words);
+                prev_lookup_words = yamli_words;
             } else {
                 prev_yamli_words = yamli_words;
             }
-        } else {
-            num_seen_word = 0;            
         }
     });
 });
@@ -88,8 +95,6 @@ $(document).ready(function() {
     height: 40px; 
     width: 300px; 
     text-align: center;
-    background: url(http://www.yamli.com/images/logo_y_96x96.gif) no-repeat scroll 7px 7px;
-    background-size: 40px 40px;
 }
 #yamli_results {margin: 0 auto; font-size:120%;}
 table td {padding:10pt;}
@@ -107,7 +112,9 @@ table td {padding:10pt;}
 <div id="query" class="offset5 span3 topspace">
     <form>
     <input type="text" class="big" id="arabictextbox"/>
-    Try: <a class="sample">3raby</a>, <a class="sample">kitab</a>, <a class="sample">madrasa</a>
+    Try: <a class="sample">3raby</a>, 
+         <a class="sample">kitab</a>, 
+         <a class="sample">madrasa</a>
     </form>
 </div>
 </div>
@@ -121,9 +128,10 @@ table td {padding:10pt;}
 <!-- YAMLI CODE START -->
 <script type="text/javascript" src="http://api.yamli.com/js/yamli_api.js"></script>
 <script type="text/javascript">
-  if (typeof(Yamli) == "object" && Yamli.init( { uiLanguage: "en" , startMode: "onOrUserDefault" } ))
+  if (typeof(Yamli) == "object" && Yamli.init({uiLanguage: "en", 
+                                               startMode: "onOrUserDefault"}))
   {
-    Yamli.yamlify( "arabictextbox", { settingsPlacement: "hide", uiFontFamily: 'Ubuntu' } );
+    Yamli.yamlify("arabictextbox", {settingsPlacement: "hide", uiFontFamily: 'Ubuntu'});
   }
 </script>
 <!-- YAMLI CODE END -->
