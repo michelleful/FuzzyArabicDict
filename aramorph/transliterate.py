@@ -28,25 +28,25 @@ assert len(buck) == len(unic) == len(ala)
 buck2unic = dict(zip([ord(letter) for letter in buck], unic))
 unic2buck = dict(zip([ord(letter) for letter in unic], buck))
 
-def transliterate_b2u(buckwalter_string):
+def b2u(buckwalter_string):
     string = unicode(buckwalter_string).translate(buck2unic)
     return string.replace(u"\u0671", u"\u0627") 
     # because alef wasla doesn't show up properly in most fonts
 
-def transliterate_u2b(unicode_string):
+def u2b(unicode_string):
     return unicode_string.translate(unic2buck)
 
-def transliterate_b2ala_letter(letter):
+def b2ala_letter(letter):
     try:
         return ala[buck.index(letter)]
     except:
         return letter
 
-def transliterate_b2ala(buckwalter_string):
+def b2ala(buckwalter_string):
     # deal with shadda (doubled letters)
     string = re.sub(r"(.)~", r"\1\1", buckwalter_string)
 
-    string = u"".join([transliterate_b2ala_letter(letter) for letter in string])
+    string = u"".join([b2ala_letter(letter) for letter in string])
 
     # deal with uw, iy - make them ū and ī
     # might not be 100% correct - should they remain "uw", "iy" in some contexts?
