@@ -57,5 +57,9 @@ def b2ala(buckwalter_string):
     string = string.replace(u"aan", "an") # nunated alif
     string = string.replace(u"āa", u"ā")
     string = string.replace(u"ūu", u"ū")
-    
+
+    # special case - 3 l's in Allah because there are 2 written l's 
+    # and one has a shadda
+    string = string.replace(u"lll", u"ll")
+
     return string
