@@ -8,10 +8,10 @@
 // global variables - control the number of times we do the Ajax call
 var prev_yamli_words = ""; // Previous comma-separated string of words looked up by Yamli
 var prev_lookup_words = ","; // Previous c-s string of words we sent to the app
-var yamli_words = "";
+var xhr = null;
 
 function analyse(yamli_words) {
-   $.ajax({
+   var xhr = $.ajax({
       type: "POST",
       contentType: "application/json; charset=utf-8",
       url: "{{ url_for('query') }}",
@@ -19,6 +19,7 @@ function analyse(yamli_words) {
       success: function (data) { display_results(data); },
       dataType: "json",
    });
+   return xhr;
 }
 
 function display_results(data) {
@@ -67,9 +68,19 @@ $(document).ready(function() {
                 return $(this).css('font-style') == 'italic';
             });
             // create lookup string from the words Yamli returned
-            var yamli_words = new_results.map(function(i, el) {
+            var yamli_wordlist = new_results.map(function(i, el) {
                 return $(el).text();
-            }).get().join();
+            });
+            // check that we don't have a stray أ on the end 
+            // (Firefox bug of uncertain origin)
+            if (yamli_wordlist[yamli_wordlist.length - 1] == "أ" && 
+                yamli_wordlist.length > 1) {
+                yamli_wordlist.pop();
+            }
+            if (yamli_wordlist[yamli_wordlist.length - 1].trim().length == 0) {
+                yamli_wordlist = [];
+            }
+            var yamli_words = yamli_wordlist.get().join();
 
             // if they're the same, and they're not words we've previously looked up
             // (this stipulation cuts down on redundant queries), 
@@ -77,9 +88,10 @@ $(document).ready(function() {
             // send it off to be analysed!
             if (yamli_words == prev_yamli_words  && 
                 yamli_words != prev_lookup_words && 
-                yamli_words != "أ,أ,أ, " && // bug in Firefox (?)
                 yamli_words.length != 0) {
-                    analyse(yamli_words);
+                    // kill the previous AJAX request if there is one outstanding
+                    if (xhr && xhr.readyState < 4) { xhr.abort(); }
+                    xhr = analyse(yamli_words);
                     prev_lookup_words = yamli_words;
             } else {
                 prev_yamli_words = yamli_words;
