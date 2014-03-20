@@ -98,10 +98,10 @@ $(document).ready(function() {
             if (yamli_words == prev_yamli_words  && 
                 yamli_words != prev_lookup_words && 
                 yamli_words.length != 0) {
-                    // kill the previous AJAX request if there is one outstanding
-                    if (xhr && xhr.readyState < 4) { xhr.abort(); }
-                    xhr = analyse(yamli_words);
-                    prev_lookup_words = yamli_words;
+                // kill the previous AJAX request if there is one outstanding
+                if (xhr && xhr.readyState < 4) { xhr.abort(); }
+                xhr = analyse(yamli_words);
+                prev_lookup_words = yamli_words;
             } else {
                 prev_yamli_words = yamli_words;
             }

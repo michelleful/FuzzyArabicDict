@@ -23,11 +23,18 @@ def main():
 def query():
     if request.json and 'words' in request.json:
         results = list()
-        for word in request.json['words'].split(","):
+        words = request.json['words'].split(",")
+        for word in words:
             for analysis in analyser.ai.analyse_arabic(word):
                 if analysis and analysis not in results:
                     results.append(analysis)
-        return jsonify(analyses=results), 201
+        if len(results) > 0:
+            return jsonify(analyses=results), 201
+        else:
+            # Yamli gave us some words but we didn't find them in Buckwalter AMA
+            # give some abbreviated information anyway
+            results = analyser.ai.information(words)
+            return jsonify(analyses=results), 201
 
 # TODO: add route like /kitab etc
 # fuzzy.herokuapp.com/kitab ---> page with "kitab" already filled in and all the possibilities displayed

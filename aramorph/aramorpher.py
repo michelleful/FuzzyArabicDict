@@ -147,4 +147,13 @@ class Aramorpher(object):
                 
         return solutions
 
-
+    def information(self, words):
+        """Return unglossed information for a list of Arabic words (used when analyse() turned up empty)"""
+        solutions = list()
+        for word in words:
+            solutions.append({'word': word,
+                              'vowelled': "",
+                              'transliteration': transliterate.b2ala(transliterate.u2b(word)),
+                              'pos': "",
+                              'gloss': "Not found in dictionary"})
+        return solutions
