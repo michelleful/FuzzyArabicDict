@@ -36,6 +36,12 @@ function display_results(data) {
     }
 }
 
+function no_results_actual() {
+    $("#yamli_results").html("");
+    var table_row = "<tr><td><p class='error'>No matching words found</p></td></tr>";
+    $("#yamli_results").append(table_row);
+}
+
 function try_sample(word) {
     $("#arabictextbox").val(word).focus().trigger("click");
 }
@@ -75,10 +81,13 @@ $(document).ready(function() {
             // (Firefox bug of uncertain origin)
             if (yamli_wordlist[yamli_wordlist.length - 1] == "أ" && 
                 yamli_wordlist.length > 1) {
-                yamli_wordlist.pop();
+                yamli_wordlist.last().remove();
             }
-            if (yamli_wordlist[yamli_wordlist.length - 1].trim().length == 0) {
-                yamli_wordlist = [];
+            // check that we don't have an empty string at the end
+            // another symptom of the bug of unknown origin
+            if (yamli_wordlist.length > 0 && 
+                yamli_wordlist[yamli_wordlist.length - 1].trim().length == 0) {
+                yamli_wordlist = $();
             }
             var yamli_words = yamli_wordlist.get().join();
 
