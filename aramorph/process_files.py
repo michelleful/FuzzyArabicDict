@@ -1,8 +1,13 @@
 import re
 
 def process_textfile(filename):
+    root = '' # should always be empty for prefixes and suffixes
     with open(filename, "r") as f:
         for line in f:
+            if line.startswith(';--- '): # this contains the root
+                root = line.replace(';--- ','').split()[0].split('(')[0]
+            elif line.startswith(';-----'): # "reset" line for when there's no root
+                root = ''
             if line.startswith(';'):
                 continue
             try:
@@ -12,7 +17,12 @@ def process_textfile(filename):
 
                 # make pos and gloss more human-readable
                 pos, gloss = process_pos(vowelled, cat, gloss)
-                yield (unvowelled, vowelled, cat, pos, gloss)
+                
+                # remove root in the case of proper nouns as it's close to meaningless
+                if cat == 'Nprop':
+                    root = ''
+                    
+                yield (unvowelled, vowelled, cat, pos, gloss, root)
             except:
                 continue
 
