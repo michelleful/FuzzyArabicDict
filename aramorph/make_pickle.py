@@ -14,16 +14,16 @@ bc = defaultdict(list)
 ac = defaultdict(list)
 
 def process_prefixes():
-    for (unvowelled, vowelled, cat, pos, gloss) in process_textfile("dictprefixes"):
-        prefixes[unvowelled].append(Morpheme(vowelled, cat, pos, gloss))
+    for (unvowelled, vowelled, cat, pos, gloss, root) in process_textfile("dictprefixes"):
+        prefixes[unvowelled].append(Morpheme(vowelled, cat, pos, gloss, root))
 
 def process_stems():
-    for (unvowelled, vowelled, cat, pos, gloss) in process_textfile("dictstems"):
-        stems[unvowelled].append(Morpheme(vowelled, cat, pos, gloss))
+    for (unvowelled, vowelled, cat, pos, gloss, root) in process_textfile("dictstems"):
+        stems[unvowelled].append(Morpheme(vowelled, cat, pos, gloss, root))
 
 def process_suffixes():
-    for (unvowelled, vowelled, cat, pos, gloss) in process_textfile("dictsuffixes"):
-        suffixes[unvowelled].append(Morpheme(vowelled, cat, pos, gloss))
+    for (unvowelled, vowelled, cat, pos, gloss, root) in process_textfile("dictsuffixes"):
+        suffixes[unvowelled].append(Morpheme(vowelled, cat, pos, gloss, root))
 
 def process_tableAB():
     for (left, right) in process_tableXY("tableab"):

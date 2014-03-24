@@ -9,12 +9,20 @@ Run this first:
 """
 import transliterate
 
-class Morpheme(object):    
-    def __init__(self, vowelled, cat, pos, gloss):
+class Morpheme(object):
+    def __init__(self, vowelled, cat, pos, gloss, root):
         self.vowelled   = vowelled
         self.gloss      = gloss
-        self.cat        = cat # for verifying compatibility
-        self.pos        = pos # human-readable part of speech
+        self.cat        = cat  # for verifying compatibility
+        self.pos        = pos  # human-readable part of speech
+        self.root       = root # only really valid for (a subset of) stems, 
+                               # empty for everything else
+                               
+        def __str__(self):
+            return "%s (%s) %s %s %s" % (self.vowelled, self.root, self.cat, self.pos, self.gloss)
+        
+        def __repr__(self):
+            return self.__str__()
         
 # this is what we'll pickle
 class Aramorpher(object):
@@ -134,15 +142,14 @@ class Aramorpher(object):
                                     stem_entry.vowelled + \
                                     suffix_entry.vowelled
 
-                    pos = stem_entry.pos
-
                     gloss = "%s + %s + %s" % (prefix_entry.gloss, stem_entry.gloss, suffix_entry.gloss)
                     gloss = gloss.strip().strip("+").strip()
 
                     solutions.append({'word': transliterate.b2u(word), 
                                       'vowelled': transliterate.b2u(vowelled_form),
                                       'transliteration': transliterate.b2ala(vowelled_form), 
-                                      'pos': pos, 
+                                      'root': transliterate.b2u(stem_entry.root),
+                                      'pos': stem_entry.pos, 
                                       'gloss': gloss})
                 
         return solutions
@@ -155,5 +162,6 @@ class Aramorpher(object):
                               'vowelled': "",
                               'transliteration': transliterate.b2ala(transliterate.u2b(word)),
                               'pos': "",
+                              'root': "",
                               'gloss': "Not found in dictionary"})
         return solutions
