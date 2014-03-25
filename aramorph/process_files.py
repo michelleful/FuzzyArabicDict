@@ -80,7 +80,7 @@ def process_pos(voc, cat, glossPOS):
             POS = "Perfect verb"
         elif cat.startswith('CV'):
             POS = "Imperative verb"
-        elif cat.startswith('N') and p_AZ.search(gloss):
+        elif cat.startswith('N') and p_AZ.search(gloss): # gloss starts with a capital letter
             POS = "Proper noun" # educated guess, (99% correct)
         elif cat.startswith('N') and p_iy.search(voc):
             POS = "Noun" # (was NOUN_ADJ: some of these are really ADJ' and need to be tagged manually)
