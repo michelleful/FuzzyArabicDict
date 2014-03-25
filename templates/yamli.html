@@ -30,7 +30,7 @@ function display_results(data) {
         var table_row = "<tr><td><span class='arabic'>" + analysis.word + 
                        "</span></td><td><span class='arabic'>" + analysis.vowelled +
                        "</span></td><td>" + analysis.transliteration +
-                       "</td><td>" + ((analysis.root.length > 0) ? "Root: " : "") +
+                       "</td><td nowrap>" + ((analysis.root.length > 0) ? "Root: " : "") +
                             "<span class='arabic'>" + analysis.root + 
                        "</span></td><td>" + analysis.pos + 
                        "</td><td>" + analysis.gloss + 
