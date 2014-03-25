@@ -18,11 +18,11 @@ class Morpheme(object):
         self.root       = root # only really valid for (a subset of) stems, 
                                # empty for everything else
                                
-        def __str__(self):
-            return "%s (%s) %s %s %s" % (self.vowelled, self.root, self.cat, self.pos, self.gloss)
-        
-        def __repr__(self):
-            return self.__str__()
+    def __str__(self):
+        return "%s (%s) %s %s %s" % (self.vowelled, self.root, self.cat, self.pos, self.gloss)
+    
+    def __repr__(self):
+        return self.__str__()
         
 # this is what we'll pickle
 class Aramorpher(object):

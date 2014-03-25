@@ -4,11 +4,13 @@ def process_textfile(filename):
     root = '' # should always be empty for prefixes and suffixes
     with open(filename, "r") as f:
         for line in f:
-            if line.startswith(';--- '): # this contains the root
+            if line.startswith(';--- '): # this contains the root for the following lines
+                # root is the first word (might be followed by comments), 
+                # up to the first bracket (sometimes there's "ktb(1)" etc.)
                 root = line.replace(';--- ','').split()[0].split('(')[0]
             elif line.startswith(';-----'): # "reset" line for when there's no root
                 root = ''
-            if line.startswith(';'):
+            elif line.startswith(';'):
                 continue
             try:
                 (unvowelled, vowelled, cat, gloss) = line.split('\t')
@@ -17,12 +19,14 @@ def process_textfile(filename):
 
                 # make pos and gloss more human-readable
                 pos, gloss = process_pos(vowelled, cat, gloss)
-                
-                # remove root in the case of proper nouns as it's close to meaningless
-                if cat == 'Nprop':
-                    root = ''
+ 
+                # concept of a root is usually useless when word is a proper noun               
+                if pos == "Proper noun":
+                    local_root = ""
+                else:
+                    local_root = root
                     
-                yield (unvowelled, vowelled, cat, pos, gloss, root)
+                yield (unvowelled, vowelled, cat, pos, gloss, local_root)
             except:
                 continue
 
