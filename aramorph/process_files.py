@@ -8,6 +8,15 @@ def process_textfile(filename):
                 # root is the first word (might be followed by comments), 
                 # up to the first bracket (sometimes there's "ktb(1)" etc.)
                 root = line.replace(';--- ','').split()[0].split('(')[0]
+                
+                if "/" in root:
+                    # Buckwalter gives possible variants of root, e.g.
+                    # Axw/y = Axw or Axy
+                    # nw/yf = nwf or nyf
+                    # it's always a w/y thing
+                    # go with /w/ as Hans Wehr almost always shows a /w/ as a variant
+                    root = root.replace("w/y","w")
+                
             elif line.startswith(';-----'): # "reset" line for when there's no root
                 root = ''
             elif line.startswith(';'):
