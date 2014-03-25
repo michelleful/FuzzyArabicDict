@@ -31,8 +31,8 @@ function display_results(data) {
                        "</span></td><td><span class='arabic'>" + analysis.vowelled +
                        "</span></td><td>" + analysis.transliteration +
                        "</td><td nowrap>" + ((analysis.root.length > 0) ? "Root: " : "") +
-                            "<span class='arabic'>" + analysis.root + 
-                       "</span></td><td>" + analysis.pos + 
+                            "<span class='arabic'>" + analysis.root + "</span>" +
+                       "</td><td>" + analysis.pos + 
                        "</td><td>" + analysis.gloss + 
                        "</td></tr>";
         $("#yamli_results").append(table_row);
@@ -124,8 +124,8 @@ $(document).ready(function() {
 }
 #yamli_results {margin: 0 auto; font-size:120%;}
 table td {padding:10pt;}
-/*#yamli_results td:nth-child(1), td:nth-child(2), td:nth-child(4) {text-align: right;}*/
-.arabic {font-size:160%; text-align: right;}
+#yamli_results td:nth-child(1), td:nth-child(2), td:nth-child(4) {text-align: right;}
+.arabic {font-size:160%; }
 #yamli_results tr:nth-child(odd) { background-color:#F2F2F2; }
 #yamli_logo {width:40px; height: auto;}
 </style>
