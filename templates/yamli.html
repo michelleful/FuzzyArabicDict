@@ -2,14 +2,12 @@
 
 {% block head %}
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<!--<script type="text/javascript" src="jquery.monitor.js"></script>-->
 <script type="text/javascript">
 
 // global variables - control the number of times we do the Ajax call
 var prev_yamli_words = ""; // Previous comma-separated string of words looked up by Yamli
 var prev_lookup_words = ","; // Previous c-s string of words we sent to the app
 var xhr = null;
-var table_header = "<tr><td>Word</td><td>Vowelled Form</td><td>Transliteration</td><td>Root</td><td>Part of speech</td><td>Meaning</td></tr>";
 
 function analyse(yamli_words) {
    var xhr = $.ajax({
