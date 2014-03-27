@@ -47,10 +47,17 @@ function try_sample(word) {
     $("#arabictextbox").val(word).focus().trigger("click");
 }
 
+function set_ltr() {
+    // set textbox direction to be ltr rather than Yamli-specified rtl
+    $("#arabictextbox").css("direction", "ltr");
+}
+
 $(document).ready(function() {
     $(".sample").click(function() {
         try_sample($(this).text());
-    });
+    }).one("click", set_ltr);
+
+    $("#arabictextbox").one("keypress", set_ltr);
 
     // check if Yamli has updated
     $(".yamliapi_inst_ff_arabictextbox.yamliapi_menuContent").live("DOMSubtreeModified",function(){
@@ -158,7 +165,8 @@ table td {padding:10pt;}
   if (typeof(Yamli) == "object" && Yamli.init({uiLanguage: "en", 
                                                startMode: "onOrUserDefault"}))
   {
-    Yamli.yamlify("arabictextbox", {settingsPlacement: "hide", uiFontFamily: 'Ubuntu'});
+    Yamli.yamlify("arabictextbox", {settingsPlacement: "hide", 
+                                    uiFontFamily: 'Ubuntu' });
   }
 </script>
 <!-- YAMLI CODE END -->
