@@ -59,6 +59,9 @@ $(document).ready(function() {
 
     $("#arabictextbox").one("keypress", set_ltr);
 
+    //set initial focus to the textbox so the user can simply start typing when the website has loaded
+    $("#arabictextbox").focus();
+
     // check if Yamli has updated
     $(".yamliapi_inst_ff_arabictextbox.yamliapi_menuContent").live("DOMSubtreeModified",function(){
         // find what's in the textbox
