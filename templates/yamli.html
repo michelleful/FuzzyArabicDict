@@ -133,7 +133,6 @@ $(document).ready(function() {
             }).not(function () {
                 return $(this).css('font-style') == 'italic';
             }).each(function() {
-                console.log($(this).text())
                 yamli_wordlist.push($(this).text());
             });
 
