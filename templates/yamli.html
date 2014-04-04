@@ -47,29 +47,77 @@ function try_sample(word) {
     $("#arabictextbox").val(word).focus().trigger("click");
 }
 
-function set_ltr() {
+function undo_yamli() {
+    // overrides some Yamli stuff that I don't want to happen
+    // this has to be called on user input because Yamli activates
+    // after the document is ready
+
     // set textbox direction to be ltr rather than Yamli-specified rtl
     $("#arabictextbox").css("direction", "ltr");
+
+    // intercept space and enter on the textbox so nothing happens
+    // currently, space/enter turn the lookup word into Arabic (Yamli function)
+    // a second enter "submits" the page and reloads
+    // neither of these is desirable
+    
+    // current status: space is disabled and the submit-on-enter is disabled
+    // one enter still turns the word into Arabic (as per Yamli)
+    // not sure how to combat that
+    $("#arabictextbox").keydown(function(e){
+        var keyCode = e.keyCode || e.which;
+        if (keyCode == 13 || keyCode == 32) {
+            e.preventDefault();
+        }
+    });
 }
+
+// add indexOf to array functionality if it doesn't yet exist (IE8 and earlier)
+if(!Array.prototype.indexOf) {
+    Array.prototype.indexOf = function(what, i) {
+        i = i || 0;
+        var L = this.length;
+        while (i < L) {
+            if(this[i] === what) return i;
+            ++i;
+        }
+        return -1;
+    };
+}
+
+// add additional array functionality: remove all elements of a certain value
+// modifies in place. usage: myArray.remove(value)
+Array.prototype.remove = function() {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};
 
 $(document).ready(function() {
     $(".sample").click(function() {
         try_sample($(this).text());
-    }).one("click", set_ltr);
+    }).one("click", undo_yamli);
 
-    $("#arabictextbox").one("keypress", set_ltr);
+    $("#arabictextbox").one("keypress", undo_yamli);
 
-    //set initial focus to the textbox so the user can simply start typing when the website has loaded
+    // set initial focus to the textbox so the user can simply start typing when the website has loaded
     $("#arabictextbox").focus();
 
     // check if Yamli has updated
     $(".yamliapi_inst_ff_arabictextbox.yamliapi_menuContent").live("DOMSubtreeModified",function(){
+
         // find what's in the textbox
         var user_input = $("#arabictextbox").val();
+
         // find out what Yamli was querying
         var lookup_word = $(this).find("div").filter(function() {
             return $(this).css('font-style') == 'italic';
         }).text();
+
         // Yamli's sometimes a step behind while the user's typing 
         // so if they've synced up, it's time to start looking up stuff
         if (lookup_word == user_input) {
@@ -79,28 +127,31 @@ $(document).ready(function() {
             // and wait for them to stabilise
 
             // get the new results returned by Yamli
-            var new_results = $(this).find("div").filter(function () {
+            var yamli_wordlist = [];
+            var new_results = $(this).find("div").filter(function() {
                 return $(this).css('direction') == 'rtl';
             }).not(function () {
                 return $(this).css('font-style') == 'italic';
+            }).each(function() {
+                console.log($(this).text())
+                yamli_wordlist.push($(this).text());
             });
-            // create lookup string from the words Yamli returned
-            var yamli_wordlist = new_results.map(function(i, el) {
-                return $(el).text();
-            });
-            // check that we don't have a stray أ on the end 
+
+            // remove extra أ's on the end 
             // (Firefox bug of uncertain origin)
-            if (yamli_wordlist[yamli_wordlist.length - 1] == "أ" && 
-                yamli_wordlist.length > 1) {
-                yamli_wordlist.last().remove();
+            if (yamli_wordlist[0] != "اى") {
+                yamli_wordlist.remove("أ");
             }
+
             // check that we don't have an empty string at the end
-            // another symptom of the bug of unknown origin
+            // another symptom of the Firefox bug of unknown origin
             if (yamli_wordlist.length > 0 && 
                 yamli_wordlist[yamli_wordlist.length - 1].trim().length == 0) {
                 yamli_wordlist = $();
             }
-            var yamli_words = yamli_wordlist.get().join();
+
+            // join lookup words into a comma-separated string
+            var yamli_words = yamli_wordlist.join();
 
             // if they're the same, and they're not words we've previously looked up
             // (this stipulation cuts down on redundant queries), 
