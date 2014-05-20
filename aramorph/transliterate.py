@@ -13,7 +13,7 @@ unic = u"".join(map(unichr,
 
 # more reader-friendly transliteration - ALA/Wehr 
 ala  = [# hamza through ghayn
-        u"ʾ",u"ʾā",u"ʾ",u"ʾ",u"ʾ",u"ʾ",u"a",u"b",u"h",u"t",u"ṯ",u"j",u"ḥ",u"ḵ",
+        u"ʾ",u"ʾā",u"ʾ",u"ʾ",u"ʾ",u"ʾ",u"ā",u"b",u"h",u"t",u"ṯ",u"j",u"ḥ",u"ḵ",
         u"d",u"ḏ",u"r",u"z",u"s",u"š",u"ṣ",u"ḍ",u"ṭ",u"ẓ",u"ʿ",u"ḡ",
         # taTwiil through sukuun
         u"",u"f",u"q",u"k",u"l",u"m",u"n",u"h",u"w",u"ā",u"y",
