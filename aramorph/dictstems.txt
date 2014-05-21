@@ -22012,7 +22012,7 @@ jAsr	jAsir	N0	Jasir
 ;; tajasoTan_1
 tjsTn	tajasoTan	PV-n	relax;lounge;loll back
 tjsTn	tajasoTan	IV-n	relax;lounge;loll back
-;
+;--- jsm
 ;; jasum-u_1
 jsm	jasum	PV_intr	be large;be bulky
 jsm	josum	IV_intr	be large;be bulky

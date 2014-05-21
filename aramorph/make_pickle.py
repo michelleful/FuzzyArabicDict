@@ -14,27 +14,27 @@ bc = defaultdict(list)
 ac = defaultdict(list)
 
 def process_prefixes():
-    for (unvowelled, vowelled, cat, pos, gloss, root) in process_textfile("dictprefixes"):
+    for (unvowelled, vowelled, cat, pos, gloss, root) in process_textfile("dictprefixes.txt"):
         prefixes[unvowelled].append(Morpheme(vowelled, cat, pos, gloss, root))
 
 def process_stems():
-    for (unvowelled, vowelled, cat, pos, gloss, root) in process_textfile("dictstems"):
+    for (unvowelled, vowelled, cat, pos, gloss, root) in process_textfile("dictstems.txt"):
         stems[unvowelled].append(Morpheme(vowelled, cat, pos, gloss, root))
 
 def process_suffixes():
-    for (unvowelled, vowelled, cat, pos, gloss, root) in process_textfile("dictsuffixes"):
+    for (unvowelled, vowelled, cat, pos, gloss, root) in process_textfile("dictsuffixes.txt"):
         suffixes[unvowelled].append(Morpheme(vowelled, cat, pos, gloss, root))
 
 def process_tableAB():
-    for (left, right) in process_tableXY("tableab"):
+    for (left, right) in process_tableXY("tableab.txt"):
         ab[left].append(right)
 
 def process_tableBC():
-    for (left, right) in process_tableXY("tablebc"):
+    for (left, right) in process_tableXY("tablebc.txt"):
         bc[left].append(right)
 
 def process_tableAC():
-    for (left, right) in process_tableXY("tableac"):
+    for (left, right) in process_tableXY("tableac.txt"):
         ac[left].append(right)
 
 if __name__ == "__main__":
