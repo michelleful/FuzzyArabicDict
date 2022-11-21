@@ -1,43 +1,101 @@
-body {font-family: Ubuntu,sans-serif; color:#555;}
-h1 {font-size: 200%; line-height: 150%;}
-h3 {line-height:105%;font-weight: bold; padding-left: 5pt;}
-p {font-size: 120%; line-height: 130%; padding-left: 5pt;}
-.header {background-color:#F2F2F2;}
-.big {font-size: 165%; font-weight: bold; height:40px;}
-.grey {opacity:0.5; filter:alpha(opacity=50);}
-img.resize {width:17.5%; height: auto; padding-right:20pt;}
-.topspace {margin-top:15pt;}
-.negtopspace {margin-top:7pt;}
-.bottomspace {margin-bottom:10pt;}
-.leftspace {margin-left:5pt;}
+body {
+    font-family: Ubuntu, sans-serif;
+    color: #555;
+}
+
+h1 {
+    font-size: 200%;
+    line-height: 150%;
+}
+
+h3 {
+    line-height: 105%;
+    font-weight: bold;
+    padding-left: 5pt;
+}
+
+p {
+    font-size: 120%;
+    line-height: 130%;
+    padding-left: 5pt;
+}
+
+.header {
+    background-color: #F2F2F2;
+}
+
+.big {
+    font-size: 165%;
+    font-weight: bold;
+    height: 40px;
+}
+
+.grey {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+
+img.resize {
+    width: 17.5%;
+    height: auto;
+    padding-right: 20pt;
+}
+
+.topspace {
+    margin-top: 15pt;
+}
+
+.negtopspace {
+    margin-top: 7pt;
+}
+
+.bottomspace {
+    margin-bottom: 10pt;
+}
+
+.leftspace {
+    margin-left: 5pt;
+}
+
 .roundbutton {
-    width:100px;
-    height:100px;
-    border-radius:100%;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
     border-color: #171516;
     border-width: 11px;
     border-style: solid;
-    color:#171516;
-    font-size:50px;
+    color: #171516;
+    font-size: 50px;
     line-height: 120px;
     font-weight: bold;
-    text-align:center;
-    margin-left:25px;
+    text-align: center;
+    margin-left: 25px;
 }
+
 .roundbutton2 {
-    width:119px;
-    height:119px;
-    border-radius:100%;
+    width: 119px;
+    height: 119px;
+    border-radius: 100%;
     border-color: #171516;
     border-width: 11px;
     border-style: solid;
-    color:#171516;
-    font-size:50px;
+    color: #171516;
+    font-size: 50px;
     line-height: 120px;
     font-weight: bold;
-    margin:auto;
+    margin: auto;
 }
-.smaller {border-width: 9px; width:90px; height: 90px; font-size: 31px; font-weight:bold; line-height:90px; margin-top:10px;}
+
+.smaller {
+    border-width: 9px;
+    width: 90px;
+    height: 90px;
+    font-size: 31px;
+    font-weight: bold;
+    line-height: 90px;
+    margin-top: 10px;
+}
+
 .rotate45 {
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
@@ -46,6 +104,13 @@ img.resize {width:17.5%; height: auto; padding-right:20pt;}
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
     transform: rotate(-45deg);
 }
-.floatleft {float:left; margin-right:15pt;}
-.greyout {color:#555; border-color:#555; }
 
+.floatleft {
+    float: left;
+    margin-right: 15pt;
+}
+
+.greyout {
+    color: #555;
+    border-color: #555;
+}

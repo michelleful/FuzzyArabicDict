@@ -4,138 +4,162 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript">
 
-// global variables - control the number of times we do the Ajax call
-var prev_yamli_words = ""; // Previous comma-separated string of words looked up by Yamli
-var prev_lookup_words = ","; // Previous c-s string of words we sent to the app
-var xhr = null;
+    // global variables - control the number of times we do the Ajax call
+    var prev_yamli_words = ""; // Previous comma-separated string of words looked up by Yamli
+    var prev_lookup_words = ","; // Previous c-s string of words we sent to the app
+    var xhr = null;
 
-function analyse(yamli_words) {
-   var xhr = $.ajax({
-      type: "POST",
-      contentType: "application/json; charset=utf-8",
-      url: "{{ url_for('query') }}",
-      data: JSON.stringify({'words': yamli_words}),
-      success: function (data) { display_results(data); },
-      dataType: "json",
-   });
-   return xhr;
-}
+    function analyse(yamli_words) {
+        var xhr = $.ajax({
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            url: "{{ url_for('query') }}",
+            data: JSON.stringify({ 'words': yamli_words }),
+            success: function (data) { display_results(data); },
+            dataType: "json",
+        });
+        return xhr;
+    }
 
-function display_results(data) {
-    $("#yamli_results").html("");
-    for (var analysis_number in data.analyses) {
-        var analysis = data.analyses[analysis_number];
-        var table_row = "<tr><td><span class='arabic'>" + analysis.word + 
-                       "</span></td><td><span class='arabic'>" + analysis.vowelled +
-                       "</span></td><td>" + analysis.transliteration +
-                       "</td><td nowrap>" + ((analysis.root.length > 0) ? "Root: " : "") +
-                            "<span class='arabic'>" + analysis.root + "</span>" +
-                       "</td><td>" + analysis.pos + 
-                       "</td><td>" + analysis.gloss + 
-                       "</td></tr>";
+    function display_results(data) {
+        $("#yamli_results").html("");
+        for (var analysis_number in data.analyses) {
+            var analysis = data.analyses[analysis_number];
+            var table_row = "<tr><td><span class='arabic'>" + analysis.word +
+                "</span></td><td><span class='arabic'>" + analysis.vowelled +
+                "</span></td><td>" + analysis.transliteration +
+                "</td><td nowrap>" + ((analysis.root.length > 0) ? "Root: " : "") +
+                "<span class='arabic'>" + analysis.root + "</span>" +
+                "</td><td>" + analysis.pos +
+                "</td><td>" + analysis.gloss +
+                "</td></tr>";
+            $("#yamli_results").append(table_row);
+        }
+    }
+
+    function no_results_actual() {
+        $("#yamli_results").html("");
+        var table_row = "<tr><td><p class='error'>No matching words found</p></td></tr>";
         $("#yamli_results").append(table_row);
     }
-}
 
-function no_results_actual() {
-    $("#yamli_results").html("");
-    var table_row = "<tr><td><p class='error'>No matching words found</p></td></tr>";
-    $("#yamli_results").append(table_row);
-}
+    function try_sample(word) {
+        $("#arabictextbox").val(word).focus().trigger("click");
+    }
 
-function try_sample(word) {
-    $("#arabictextbox").val(word).focus().trigger("click");
-}
+    function set_ltr() {
+        // set textbox direction to be ltr rather than Yamli-specified rtl
+        $("#arabictextbox").css("direction", "ltr");
+    }
 
-function set_ltr() {
-    // set textbox direction to be ltr rather than Yamli-specified rtl
-    $("#arabictextbox").css("direction", "ltr");
-}
+    $(document).ready(function () {
+        $(".sample").click(function () {
+            try_sample($(this).text());
+        }).one("click", set_ltr);
 
-$(document).ready(function() {
-    $(".sample").click(function() {
-        try_sample($(this).text());
-    }).one("click", set_ltr);
+        $("#arabictextbox").one("keypress", set_ltr);
 
-    $("#arabictextbox").one("keypress", set_ltr);
+        //set initial focus to the textbox so the user can simply start typing when the website has loaded
+        $("#arabictextbox").focus();
 
-    //set initial focus to the textbox so the user can simply start typing when the website has loaded
-    $("#arabictextbox").focus();
-
-    // check if Yamli has updated
-    $(".yamliapi_inst_ff_arabictextbox.yamliapi_menuContent").live("DOMSubtreeModified",function(){
-        // find what's in the textbox
-        var user_input = $("#arabictextbox").val();
-        // find out what Yamli was querying
-        var lookup_word = $(this).find("div").filter(function() {
-            return $(this).css('font-style') == 'italic';
-        }).text();
-        // Yamli's sometimes a step behind while the user's typing 
-        // so if they've synced up, it's time to start looking up stuff
-        if (lookup_word == user_input) {
-            // now we have to wait for Yamli to load up all the words 
-            // (they get added 1 by 1, or at least that's how the DOM sees it)
-            // we'll compare the new results to the previous results 
-            // and wait for them to stabilise
-
-            // get the new results returned by Yamli
-            var new_results = $(this).find("div").filter(function () {
-                return $(this).css('direction') == 'rtl';
-            }).not(function () {
+        // check if Yamli has updated
+        $(".yamliapi_inst_ff_arabictextbox.yamliapi_menuContent").live("DOMSubtreeModified", function () {
+            // find what's in the textbox
+            var user_input = $("#arabictextbox").val();
+            // find out what Yamli was querying
+            var lookup_word = $(this).find("div").filter(function () {
                 return $(this).css('font-style') == 'italic';
-            });
-            // create lookup string from the words Yamli returned
-            var yamli_wordlist = new_results.map(function(i, el) {
-                return $(el).text();
-            });
-            // check that we don't have a stray أ on the end 
-            // (Firefox bug of uncertain origin)
-            if (yamli_wordlist[yamli_wordlist.length - 1] == "أ" && 
-                yamli_wordlist.length > 1) {
-                yamli_wordlist.last().remove();
-            }
-            // check that we don't have an empty string at the end
-            // another symptom of the bug of unknown origin
-            if (yamli_wordlist.length > 0 && 
-                yamli_wordlist[yamli_wordlist.length - 1].trim().length == 0) {
-                yamli_wordlist = $();
-            }
-            var yamli_words = yamli_wordlist.get().join();
+            }).text();
+            // Yamli's sometimes a step behind while the user's typing 
+            // so if they've synced up, it's time to start looking up stuff
+            if (lookup_word == user_input) {
+                // now we have to wait for Yamli to load up all the words 
+                // (they get added 1 by 1, or at least that's how the DOM sees it)
+                // we'll compare the new results to the previous results 
+                // and wait for them to stabilise
 
-            // if they're the same, and they're not words we've previously looked up
-            // (this stipulation cuts down on redundant queries), 
-            // and there are actual words to be looked up,
-            // send it off to be analysed!
-            if (yamli_words == prev_yamli_words  && 
-                yamli_words != prev_lookup_words && 
-                yamli_words.length != 0) {
-                // kill the previous AJAX request if there is one outstanding
-                if (xhr && xhr.readyState < 4) { xhr.abort(); }
-                xhr = analyse(yamli_words);
-                prev_lookup_words = yamli_words;
-            } else {
-                prev_yamli_words = yamli_words;
+                // get the new results returned by Yamli
+                var new_results = $(this).find("div").filter(function () {
+                    return $(this).css('direction') == 'rtl';
+                }).not(function () {
+                    return $(this).css('font-style') == 'italic';
+                });
+                // create lookup string from the words Yamli returned
+                var yamli_wordlist = new_results.map(function (i, el) {
+                    return $(el).text();
+                });
+                // check that we don't have a stray أ on the end 
+                // (Firefox bug of uncertain origin)
+                if (yamli_wordlist[yamli_wordlist.length - 1] == "أ" &&
+                    yamli_wordlist.length > 1) {
+                    yamli_wordlist.last().remove();
+                }
+                // check that we don't have an empty string at the end
+                // another symptom of the bug of unknown origin
+                if (yamli_wordlist.length > 0 &&
+                    yamli_wordlist[yamli_wordlist.length - 1].trim().length == 0) {
+                    yamli_wordlist = $();
+                }
+                var yamli_words = yamli_wordlist.get().join();
+
+                // if they're the same, and they're not words we've previously looked up
+                // (this stipulation cuts down on redundant queries), 
+                // and there are actual words to be looked up,
+                // send it off to be analysed!
+                if (yamli_words == prev_yamli_words &&
+                    yamli_words != prev_lookup_words &&
+                    yamli_words.length != 0) {
+                    // kill the previous AJAX request if there is one outstanding
+                    if (xhr && xhr.readyState < 4) { xhr.abort(); }
+                    xhr = analyse(yamli_words);
+                    prev_lookup_words = yamli_words;
+                } else {
+                    prev_yamli_words = yamli_words;
+                }
             }
-        }
+        });
     });
-});
 
 </script>
 
 <style type="text/css">
-#yamliapi_dyn_div {visibility:hidden;}
-#query input {
-    font-size: 200%; 
-    height: 40px; 
-    width: 300px; 
-    text-align: center;
-}
-#yamli_results {margin: 0 auto; font-size:120%;}
-table td {padding:10pt;}
-#yamli_results td:nth-child(1), td:nth-child(2) {text-align: right;}
-.arabic {font-size:160%; }
-#yamli_results tr:nth-child(odd) { background-color:#F2F2F2; }
-#yamli_logo {width:40px; height: auto;}
+    #yamliapi_dyn_div {
+        visibility: hidden;
+    }
+
+    #query input {
+        font-size: 200%;
+        height: 40px;
+        width: 300px;
+        text-align: center;
+    }
+
+    #yamli_results {
+        margin: 0 auto;
+        font-size: 120%;
+    }
+
+    table td {
+        padding: 10pt;
+    }
+
+    #yamli_results td:nth-child(1),
+    td:nth-child(2) {
+        text-align: right;
+    }
+
+    .arabic {
+        font-size: 160%;
+    }
+
+    #yamli_results tr:nth-child(odd) {
+        background-color: #F2F2F2;
+    }
+
+    #yamli_logo {
+        width: 40px;
+        height: auto;
+    }
 </style>
 
 {% endblock %}
@@ -144,49 +168,52 @@ table td {padding:10pt;}
 {% block body %}
 
 <div class="row">
-<div id="query" class="offset5 span3 topspace">
-    <form>
-    <input type="text" class="big" id="arabictextbox"/>
-    Try: <a class="sample">3raby</a>, 
-         <a class="sample">kitab</a>, 
-         <a class="sample">madrasa</a>,
-         <a class="sample">afrit</a>,
-         <a class="sample">istaktab</a>
-    </form>
-</div>
+    <div id="query" class="offset5 span3 topspace">
+        <form>
+            <input type="text" class="big" id="arabictextbox" />
+            Try: <a class="sample">3raby</a>,
+            <a class="sample">kitab</a>,
+            <a class="sample">madrasa</a>,
+            <a class="sample">afrit</a>,
+            <a class="sample">istaktab</a>
+        </form>
+    </div>
 </div>
 <div class="row">
-<div class="span9 offset2 bottomspace">
-    <table id="yamli_results" class="bottomspace"></table>
-    <p></p>
-</div>
+    <div class="span9 offset2 bottomspace">
+        <table id="yamli_results" class="bottomspace"></table>
+        <p></p>
+    </div>
 </div>
 
 <!-- YAMLI CODE START -->
 <script type="text/javascript" src="http://api.yamli.com/js/yamli_api.js"></script>
 <script type="text/javascript">
-  if (typeof(Yamli) == "object" && Yamli.init({uiLanguage: "en", 
-                                               startMode: "onOrUserDefault"}))
-  {
-    Yamli.yamlify("arabictextbox", {settingsPlacement: "hide", 
-                                    uiFontFamily: 'Ubuntu' });
-  }
+    if (typeof (Yamli) == "object" && Yamli.init({
+        uiLanguage: "en",
+        startMode: "onOrUserDefault"
+    })) {
+        Yamli.yamlify("arabictextbox", {
+            settingsPlacement: "hide",
+            uiFontFamily: 'Ubuntu'
+        });
+    }
 </script>
 <!-- YAMLI CODE END -->
 
 <!-- Google Analytics code start -->
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-  ga('create', 'UA-48100444-2', 'fuzzyarabic.herokuapp.com');
-  ga('send', 'pageview');
+    ga('create', 'UA-48100444-2', 'fuzzyarabic.herokuapp.com');
+    ga('send', 'pageview');
 
 </script>
 <!-- Google Analytics code end -->
 
 {% endblock %}
-
-

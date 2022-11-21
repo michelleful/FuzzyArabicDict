@@ -1,34 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Fuzzy Arabic Dictionary</title>
 
-    <!-- Styles -->
-    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<head>
+  <meta charset="utf-8">
+  <title>Fuzzy Arabic Dictionary</title>
 
-    <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin' rel='stylesheet' type='text/css'>
-    <link href='/static/main.css' rel='stylesheet' type='text/css'>
+  <!-- Styles -->
+  <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-    {% block head %}{% endblock %}
+  <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin' rel='stylesheet' type='text/css'>
+  <link href='/static/main.css' rel='stylesheet' type='text/css'>
 
-  </head>
+  {% block head %}{% endblock %}
 
-  <body class="container-fluid">
-    <div class="row header">
+</head>
+
+<body class="container-fluid">
+  <div class="row header">
     <div class="span9 offset3 bottomspace">
       <div class="roundbutton rotate45 smaller floatleft greyout">3raby</div>
       <p class="topspace"><span class="big">Fuzzy Arabic Dictionary</span>
-      <p>Look up Arabic words without needing to know how to spell.<br/>
-      Powered by <a href="http://yamli.com">Yamli</a> and the <a href="http://www.ldc.upenn.edu/Catalog/catalogEntry.jsp?catalogId=LDC2002L49">Buckwalter Morphological Analyzer</a>.<br/>
-      Glued together by <a href="http://www.mit.edu/~maf">Michelle Fullwood</a> with <a href="http://flask.pocoo.org/">Flask</a>.
-      <a href="http://michelleful.github.io/code-blog/2014/03/25/fuzzy-arabic-dictionary">More &raquo;</a>
+      <p>Look up Arabic words without needing to know how to spell.<br />
+        Powered by <a href="https://yamli.com">Yamli</a> and the <a
+          href="https://catalog.ldc.upenn.edu/LDC2002L49">Buckwalter Morphological
+          Analyzer</a>.<br />
+        Glued together by <a href="https://michelleful.github.io/">Michelle Fullwood</a> with <a
+          href="http://flask.pocoo.org/">Flask</a>.
+        <a href="http://michelleful.github.io/code-blog/2014/03/25/fuzzy-arabic-dictionary">More &raquo;</a>
       </p>
     </div>
-    </div><!-- end row -->
+  </div><!-- end row -->
 
-    {% block body %}{% endblock %}
+  {% block body %}{% endblock %}
 
-  </body>
+</body>
+
 </html>

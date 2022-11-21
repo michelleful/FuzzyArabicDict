@@ -5,7 +5,7 @@ import re
 # helper functions for converting from Buckwalter to Unicode and vice versa
 
 buck = u"'|>&<}AbptvjHxd*rzs$SDTZEg_fqklmnhwYyFNKaui~o0123456789`{"
-unic = u"".join(map(unichr,
+unic = u"".join(map(chr,
              list(range(0x0621, 0x063b)) + # hamza through ghayn
              list(range(0x0640, 0x0653)) + # taTwiil through sukuun
              list(range(0x0660, 0x066A)) + # numerals
@@ -29,7 +29,7 @@ buck2unic = dict(zip([ord(letter) for letter in buck], unic))
 unic2buck = dict(zip([ord(letter) for letter in unic], buck))
 
 def b2u(buckwalter_string):
-    string = unicode(buckwalter_string).translate(buck2unic)
+    string = buckwalter_string.translate(buck2unic)
     return string.replace(u"\u0671", u"\u0627") 
     # because alef wasla doesn't show up properly in most fonts
 
