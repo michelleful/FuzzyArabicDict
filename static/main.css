@@ -11,17 +11,17 @@ h1 {
 h3 {
     line-height: 105%;
     font-weight: bold;
-    padding-left: 5pt;
 }
 
 p {
     font-size: 120%;
     line-height: 130%;
-    padding-left: 5pt;
 }
 
 .header {
     background-color: #F2F2F2;
+    margin: auto;
+    width: 100%;
 }
 
 .big {
@@ -53,9 +53,6 @@ img.resize {
     margin-bottom: 10pt;
 }
 
-.leftspace {
-    margin-left: 5pt;
-}
 
 .roundbutton {
     width: 100px;
@@ -90,7 +87,7 @@ img.resize {
     border-width: 9px;
     width: 90px;
     height: 90px;
-    font-size: 31px;
+    font-size: 22px;
     font-weight: bold;
     line-height: 90px;
     margin-top: 10px;

@@ -167,20 +167,24 @@
 
 {% block body %}
 
-<div class="row">
-    <div id="query" class="offset5 span3 topspace">
+<div class="row col-md-8 offset-md-2">
+    <div id="query" class="col-md-8 offset-md-2 topspace">
         <form>
-            <input type="text" class="big" id="arabictextbox" />
-            Try: <a class="sample">3raby</a>,
-            <a class="sample">kitab</a>,
-            <a class="sample">madrasa</a>,
-            <a class="sample">afrit</a>,
-            <a class="sample">istaktab</a>
+            <div>
+                <input type="text" class="big" id="arabictextbox" />
+            </div>
+            <div>
+                Try: <a class="sample">3raby</a>,
+                <a class="sample">kitab</a>,
+                <a class="sample">madrasa</a>,
+                <a class="sample">afrit</a>,
+                <a class="sample">istaktab</a>
+            </div>
         </form>
     </div>
 </div>
-<div class="row">
-    <div class="span9 offset2 bottomspace">
+<div class="row topspace">
+    <div class="col-md-8 offset-md-2 bottomspace">
         <table id="yamli_results" class="bottomspace"></table>
         <p></p>
     </div>
