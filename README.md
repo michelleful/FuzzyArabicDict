@@ -11,7 +11,7 @@ This is basically Python glue to bring together work by others, particularly:
 > Please note that the URL has changed, due to Heroku removing its free tier. The CSS is a little off; I
 haven't had time to fix it.
 
-You can now use this online at [https://fuzzy-arabic-dict.onrender.com/](https://fuzzy-arabic-dict.onrender.com/)
+You can now use a slightly different version of this (all Javascript) online at [https://michellefullwood.com/languages/arabic/fuzzy/](https://michellefullwood.com/languages/arabic/fuzzy/).
 
 How to run this locally:
 - Have Flask installed (or `pip install -r requirements.txt`)
